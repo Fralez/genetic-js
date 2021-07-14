@@ -93,7 +93,10 @@ var Genetic = Genetic || (function(){
 		this.optimize = null;
 		this.generation = null;
 		this.notification = null;
-		
+
+		// Custom
+		this.generationResult = null
+
 		this.configuration = {
 			"size": 250
 			, "crossover": 0.9
@@ -153,14 +156,15 @@ var Genetic = Genetic || (function(){
 					, "stdev": stdev
 				};
 
-				var r = this.generation ? this.generation(pop.slice(0, this.configuration["maxResults"]), i, stats) : true;
+				var r = this.generation ? this.generation(pop, i, stats) : true;
+				this.generationResult = r;
 				var isFinished = (typeof r != "undefined" && !r) || (i == this.configuration.iterations-1);
 				
 				if (
 					this.notification
 					&& (isFinished || this.configuration["skip"] == 0 || i%this.configuration["skip"] == 0)
 				) {
-					this.sendNotification(pop.slice(0, this.configuration["maxResults"]), i, stats, isFinished);
+					this.sendNotification(pop.slice(0, this.maxResults), i, stats, isFinished);
 				}
 					
 				if (isFinished)
